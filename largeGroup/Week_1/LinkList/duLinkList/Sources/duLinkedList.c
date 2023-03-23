@@ -9,7 +9,7 @@ int main() {
     DuLinkedList L;
     ElemType e;
     PrintMenu();
-    s = scanf("%d", &n);
+    s = scanf_s("%d", &n);
     while (n != 7) {
         if (s == 1 && n >= 1 && n <= 6) {
             switch (n) {
@@ -25,14 +25,14 @@ int main() {
                     break;
                 case 3:
                     printf("please input the data: ");
-                    scanf("%d", &e);
+                    scanf_s("%d", &e);
                     DuLNode *qb = (DuLNode *) malloc(sizeof(DuLNode));
                     qb->data = e;
                     qb->next = NULL;
                     qb->prior = NULL;
                     int place_b;
                     printf("before(%d ~ %d): ", prior, next);
-                    scanf("%d", &place_b);
+                    scanf_s("%d", &place_b);
                     if (place_b > next || place_b < prior)
                         printf("error input\n");
                     else {
@@ -52,14 +52,14 @@ int main() {
                     break;
                 case 4:
                     printf("please input the data: ");
-                    scanf("%d", &e);
+                    scanf_s("%d", &e);
                     DuLNode *qa = (DuLNode *) malloc(sizeof(DuLNode));
                     qa->data = e;
                     qa->next = NULL;
                     qa->prior = NULL;
                     int place_a;
                     printf("after(%d ~ %d): ", prior, next);
-                    scanf("%d", &place_a);
+                    scanf_s("%d", &place_a);
                     if (place_a > next || place_a < prior)
                         printf("error input\n");
                     else {
@@ -78,34 +78,49 @@ int main() {
                     }
                     break;
                 case 5:
-                    printf("input which you want to delete(%d ~ %d): ", prior + 1, next);
-                    scanf("%d", &e);//位置
+                    printf("input which you want to delete(%d ~ %d): ", prior, next);
+                    scanf_s("%d", &e); // 位置
                     DuLinkedList t = L;
                     if (e > 0 && e <= next) {
-                        for (int i = 1; i < e; i++)//找到结点p
+                        for (int i = 1; i < e; i++) // 找到结点p
                             t = t->next;
                         next--;
                     } else if (e < 0 && e > prior) {
-                        for (int i = 0; i >= e; i--)//找到结点p
+                        for (int i = 0; i >= e; i--) // 找到结点p
                             t = t->prior;
                         prior++;
+                    } else if (e == prior)//特别处理
+                    {
+                        DuLinkedList current = L;
+                        while (current->prior)
+                            current = current->prior;
+                        current->next->prior = NULL;
+                        free(current);
+                        prior++;
+                        printf("success\n");
+                        break;
                     } else {
                         printf("error input\n");
                         break;
                     }
                     DeleteList_DuL(t, &e);
-                    printf("%d\n", e);//打印e
+                    printf("%d\n", e); // 打印e
                     break;
                 case 6:
+                    printf("\n");
                     TraverseList_DuL(L, visit);
                     break;
                 default:
                     break;
             }
-        } else
-            printf("you input a worry number\n");
+        } else {
+            printf("you input a worry number\n"
+                   "input '0' to continue\n");
+            char c;
+            while ((c = getchar()) != '0');
+        }
         PrintMenu();
-        s = scanf("%d", &n);
+        s = scanf_s("%d", &n);
     }
     printf("see you next time");
     return 0;

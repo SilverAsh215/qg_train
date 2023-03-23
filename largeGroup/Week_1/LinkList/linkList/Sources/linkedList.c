@@ -10,7 +10,7 @@ int main() {
     ElemType e;
     LNode *middle;
     PrintMenu();
-    s = scanf("%d", &n);
+    s = scanf_s("%d", &n);
     while (n != 13) {
         if (s == 1 && n >= 1 && n <= 12) {
             switch (n) {
@@ -25,13 +25,13 @@ int main() {
                     break;
                 case 3:
                     printf("please input the data: ");
-                    scanf("%d", &e);
+                    scanf_s("%d", &e);
                     LNode *q = (LNode *) malloc(sizeof(LNode));
                     q->data = e;
                     q->next = NULL;
                     int place;
                     printf("where(1 ~ %d): ", length + 1);
-                    scanf("%d", &place);
+                    scanf_s("%d", &place);
                     if (place > length + 1 || place <= 0) {
                         printf("error input\n");
                     } else {
@@ -45,7 +45,7 @@ int main() {
                     break;
                 case 4:
                     printf("input which you want to delete(1 ~ %d): ", length);
-                    scanf("%d", &e);//位置
+                    scanf_s("%d", &e);//位置
                     if (e > 0 && e <= length) {
                         LinkedList t = L;
                         for (int i = 1; i < e; i++)//找到结点p
@@ -58,11 +58,12 @@ int main() {
                         printf("error input\n");
                     break;
                 case 5:
+                    printf("\n");
                     TraverseList(L, visit);
                     break;
                 case 6:
                     printf("please input what you want to search: ");
-                    scanf("%d", &e);
+                    scanf_s("%d", &e);
                     if (!SearchList(L, e))
                         printf("no\n");
                     break;
@@ -95,10 +96,13 @@ int main() {
                 default:
                     break;
             }
-        } else
-            printf("you input a worry number\n");
+        } else {
+            printf("you input a worry number\n"
+                   "input '0' to continue\n");
+            while (getchar() != '0');
+        }
         PrintMenu();
-        s = scanf("%d", &n);
+        s = scanf_s("%d", &n);
     }
     printf("see you next time");
     return 0;
