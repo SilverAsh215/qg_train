@@ -1,112 +1,103 @@
 //
-// Created by xu on 23-3-19.
+// Created by reese on 23-3-22.
 //
+#include "../Headers/duLinkedList.h"
+#include <malloc.h>
+#include <stdio.h>
 
-#include "../Headers/duLinkedList_realize.h"
+Status InitList_DuL(DuLinkedList *L) {
+    DuLNode *head = (DuLNode *) malloc(sizeof(DuLNode));//创建首结点
+    head->prior = NULL;
+    head->next = NULL;//初始化
+    *L = head;        //插入结点
+    return SUCCESS;
+}
 
-int main() {
-    int n, s, prior = 0, next = 0;
-    DuLinkedList L;
-    ElemType e;
-    PrintMenu();
-    s = scanf("%d", &n);
-    while (n != 7) {
-        if (s == 1 && n >= 1 && n <= 6) {
-            switch (n) {
-                case 1:
-                    InitList_DuL(&L);
-                    printf("success\n");
-                    break;
-                case 2:
-                    DestroyList_DuL(&L);
-                    prior = 0;
-                    next = 0;
-                    printf("success\n");
-                    break;
-                case 3:
-                    printf("please input the data: ");
-                    scanf("%d", &e);
-                    DuLNode *qb = (DuLNode *) malloc(sizeof(DuLNode));
-                    qb->data = e;
-                    qb->next = NULL;
-                    qb->prior = NULL;
-                    int place_b;
-                    printf("before(%d ~ %d): ", prior, next);
-                    scanf("%d", &place_b);
-                    if (place_b > next || place_b < prior)
-                        printf("error input\n");
-                    else {
-                        DuLinkedList p = L;
-                        if (place_b > 0) {
-                            for (int i = 0; i < place_b; i++)
-                                p = p->next;
-                            next++;
-                        } else {
-                            for (int i = 0; i > place_b; i--)
-                                p = p->prior;
-                            prior--;
-                        }
-                        InsertBeforeList_DuL(p, qb);
-                        printf("success\n");
-                    }
-                    break;
-                case 4:
-                    printf("please input the data: ");
-                    scanf("%d", &e);
-                    DuLNode *qa = (DuLNode *) malloc(sizeof(DuLNode));
-                    qa->data = e;
-                    qa->next = NULL;
-                    qa->prior = NULL;
-                    int place_a;
-                    printf("after(%d ~ %d): ", prior, next);
-                    scanf("%d", &place_a);
-                    if (place_a > next || place_a < prior)
-                        printf("error input\n");
-                    else {
-                        DuLinkedList p = L;
-                        if (place_a >= 0) {
-                            for (int i = 0; i < place_a; i++)
-                                p = p->next;
-                            next++;
-                        } else {
-                            for (int i = 0; i > place_a; i--)
-                                p = p->prior;
-                            prior--;
-                        }
-                        InsertAfterList_DuL(p, qa);
-                        printf("success\n");
-                    }
-                    break;
-                case 5:
-                    printf("input which you want to delete(%d ~ %d): ", prior + 1, next);
-                    scanf("%d", &e);//位置
-                    DuLinkedList t = L;
-                    if (e > 0 && e <= next) {
-                        for (int i = 1; i < e; i++)//找到结点p
-                            t = t->next;
-                        next--;
-                    } else if (e < 0 && e > prior) {
-                        for (int i = 0; i >= e; i--)//找到结点p
-                            t = t->prior;
-                        prior++;
-                    } else {
-                        printf("error input\n");
-                        break;
-                    }
-                    DeleteList_DuL(t, &e);
-                    printf("%d\n", e);//打印e
-                    break;
-                case 6:
-                    TraverseList_DuL(L, visit);
-                    break;
-                default:
-                    break;
-            }
-        } else
-            printf("you input a worry number\n");
-        PrintMenu();
-        s = scanf("%d", &n);
+void DestroyList_DuL(DuLinkedList *L) {
+    DuLinkedList current = *L, next, prior;//创建一个新的DuLNode
+    if (current->next)                     //下
+    {
+        current = current->next;
+        while (current)//遍历链表
+        {
+            next = current->next;
+            free(current);//释放结点
+            current = next;
+        }
     }
-    printf("see you next time");
-    return 0;
+    current = *L;
+    if (current->prior)//上
+    {
+        current = current->prior;
+        while (current)//遍历链表
+        {
+            prior = current->prior;
+            free(current);//释放结点
+            current = prior;
+        }
+    }
+}
+
+Status InsertBeforeList_DuL(DuLNode *p, DuLNode *q) {
+    if (p->prior)//判断p是否有上一个结点
+    {
+        q->prior = p->prior;//使p结点的上一个结点成为q结点的上一个结点
+        p->prior->next = q; //使p结点的上一个结点的下一个结点为q
+    }
+    q->next = p; //使p结点成为q结点的下一个结点
+    p->prior = q;//使q结点成为p结点的上一个结点
+    return SUCCESS;
+}
+
+Status InsertAfterList_DuL(DuLNode *p, DuLNode *q) {
+    if (p->next)//判断p是否有下一个结点
+    {
+        q->next = p->next; //使q结点成为p结点的下一个结点的上一个结点
+        p->next->prior = q;//使q成为p的下一个的上一个
+    }
+    p->next = q; //使q结点成为p结点的下一个结点
+    q->prior = p;//使p结点成为q结点的上一个结点
+    return SUCCESS;
+}
+
+Status DeleteList_DuL(DuLNode *p, ElemType *e) {
+    DuLinkedList next = NULL;
+    if (p->next->next)//判断p的下一个结点是否为空
+    {
+        next = p->next->next;//使next等于p的下一个结点的下一个结点
+        next->prior = p;     //使next的上一个结点成为p
+    }
+    *e = p->next->data;//使e为p的下一个结点的data
+    free(p->next);     //释放p的下一个结点
+    p->next = next;    //使p的下一个结点的下一个结点成为p的下一个结点
+    return SUCCESS;
+}
+
+void TraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e)) {
+    DuLinkedList current = L;
+    while (current->prior)
+        current = current->prior;
+    while (current)//遍历链表
+    {
+        if (current == L) {
+            current = current->next;
+            continue;
+        }
+        visit(current->data);
+        current = current->next;//使L成为L的下一个结点
+    }
+}
+
+void duVisit(ElemType e)//visit
+{
+    printf("%d\n", e);
+}
+
+void duPrintMenu()//打印菜单
+{
+    printf("****************************************************************************\n"
+           "           input to choose what you need(please InitList first)\n"
+           "1.InitList    2.DestroyList   3.InsertBeforeList   4.InsertAfterList\n"
+           "5.DeleteList  6.TraverseList  7.exit\n"
+           "****************************************************************************\n");
 }

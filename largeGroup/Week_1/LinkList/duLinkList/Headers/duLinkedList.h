@@ -11,7 +11,7 @@
  *
  ***************************************************************************************/
 
- /**************************************************************
+/**************************************************************
 *	Multi-Include-Prevent Section
 **************************************************************/
 
@@ -33,14 +33,14 @@ typedef int ElemType;
 
 // define struct of linked list
 typedef struct DuLNode {
-	ElemType data;
-  	struct DuLNode *prior,  *next;
+    ElemType data;
+    struct DuLNode *prior, *next;
 } DuLNode, *DuLinkedList;
 
 // define status
 typedef enum Status {
-	ERROR,
-	SUCCESS,
+    ERROR,
+    SUCCESS,
 } Status;
 
 
@@ -102,8 +102,12 @@ Status DeleteList_DuL(DuLNode *p, ElemType *e);
  */
 void TraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e));
 
+void duVisit(ElemType e);
 
- /**************************************************************
+void duPrintMenu();
+
+
+/**************************************************************
 *	End-Multi-Include-Prevent Section
 **************************************************************/
 #endif

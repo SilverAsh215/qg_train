@@ -11,7 +11,7 @@
  *
  ***************************************************************************************/
 
- /**************************************************************
+/**************************************************************
 *	Multi-Include-Prevent Section
 **************************************************************/
 #ifndef LINKEDLIST_H_INCLUDED
@@ -32,14 +32,14 @@ typedef int ElemType;
 
 // define struct of linked list
 typedef struct LNode {
-	ElemType data;
-  	struct LNode *next;
+    ElemType data;
+    struct LNode *next;
 } LNode, *LinkedList;
 
 // define Status
 typedef enum Status {
-	ERROR,
-	SUCCESS
+    ERROR,
+    SUCCESS
 } Status;
 
 
@@ -126,7 +126,7 @@ Status IsLoopList(LinkedList L);
  *	@return		 : LNode(the new head node)
  *  @notice      : choose to finish
  */
-LNode* ReverseEvenList(LinkedList *L);
+LNode *ReverseEvenList(LinkedList *L);
 
 /**
  *  @name        : LNode* FindMidNode(LinkedList *L)
@@ -135,9 +135,18 @@ LNode* ReverseEvenList(LinkedList *L);
  *	@return		 : LNode
  *  @notice      : choose to finish
  */
-LNode* FindMidNode(LinkedList *L);
+LNode *FindMidNode(LinkedList *L);
 
- /**************************************************************
+/**************************************************************
 *	End-Multi-Include-Prevent Section
 **************************************************************/
+
+void visit(ElemType e);
+
+void MakeLoop(LinkedList *L);
+
+void MakeNotLoop(LinkedList *L);
+
+void PrintMenu();
+
 #endif
